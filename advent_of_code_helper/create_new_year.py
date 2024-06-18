@@ -8,7 +8,7 @@ def write_new_default_day(day):
     with open(DDEFAULT_DAY, 'r') as f:
         default_day_txt = f.read()
 
-    default_day_txt = re.sub(":day_value:", str(day), default_day_txt)
+    default_day_txt = re.sub(":day_value:", str(day).zfill(2), default_day_txt)
 
     with open(file_path, 'w') as f:
         f.write(default_day_txt)
