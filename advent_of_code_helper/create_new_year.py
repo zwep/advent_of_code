@@ -1,10 +1,11 @@
-from advent_of_code_helper.configuration import DDATA_YEAR, DCODE_YEAR, DDEFAULT_DAY
+from advent_of_code_helper.configuration import DDATA_YEAR, DCODE_YEAR, DDEFAULT_DAY, STARTING_DAY
 import re
 import os
 import shutil
+from pathlib import Path
 
 
-def write_new_default_day(day):
+def write_new_default_day(day: int):
     with open(DDEFAULT_DAY, 'r') as f:
         default_day_txt = f.read()
 
@@ -25,13 +26,12 @@ os.makedirs(DCODE_YEAR, exist_ok=True)
 """
 Create all the days with a default structure
 """
-# Set this variabel to determine from which day on we will generate the default py files
-STARTING_DAY = 11
+
 num_days = 25
 for ii in range(STARTING_DAY, num_days + 1):
-    file_path = os.path.join(DCODE_YEAR, f'day_{ii}.py')
+    file_path = Path(DCODE_YEAR) / f'day_{ii}.py'
     # Now copy the default...
-    if os.path.isfile(file_path):
+    if file_path.is_file():
         print(f"Day {ii} already exists")
         # Default is no
         result = input('Overwrite file? y / [n]') or "n"

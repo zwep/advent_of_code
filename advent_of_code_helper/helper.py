@@ -2,7 +2,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 import re
-from advent_of_code_helper.configuration import YEAR, DDATA_YEAR
+from advent_of_code_helper.configuration import YEAR, DDATA_YEAR, DCODE
 
 
 DIR2POS = {'N': [-1, 0], 'E': [0, 1], 'S': [1, 0], 'W': [0, -1]}
@@ -31,10 +31,18 @@ def read_lines(file_path):
 
 
 def read_lines_strip(file_path):
-    with open(file_path, 'r') as f:
-        content = f.readlines()
-
+    content = read_lines(file_path)
     return [x.strip('\n') for x in content]
+
+
+def read_lines_strip_split(file_path, split_var: str=' '):
+    content = read_lines_strip(file_path)
+    return [x.split(split_var) for x in content]
+
+
+def read_lines_strip_split_to_int(file_path, split_var: str=' '):
+    content = read_lines_strip_split(file_path, split_var=split_var)
+    return [[int(y) for y in x] for x in content]
 
 
 def fetch_data(day):
@@ -48,7 +56,7 @@ def fetch_data(day):
     if os.path.isfile(ddata_day):
         return -1
     else:
-        fetch_data = f"aocdl -day {day} -year {YEAR} -output {ddata_day}"
+        fetch_data = f"{DCODE / "aocdl"} -day {day} -year {YEAR} -output {ddata_day}"
         os.system(fetch_data)
         return 1
 
@@ -65,7 +73,7 @@ def fetch_test_data(day):
         return -1
     else:
         re_example = re.compile(r'example.*:', re.I)
-        url = f'https://adventofcode.com/{YEAR}/day/{day}'
+        url = f'https://adventofcode.com/{YEAR}/day/{int(day)}'
         # Send an HTTP request to the URL and get the HTML content
         response = requests.get(url)
         html_content = response.text
