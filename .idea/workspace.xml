@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2db9465b-0781-44c8-a8a7-1db3769751e1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/advent_of_code.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/advent_of_code.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/advent_of_code_helper/configuration.py" beforeDir="false" afterPath="$PROJECT_DIR$/advent_of_code_helper/configuration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/advent_of_code_helper/create_new_year.py" beforeDir="false" afterPath="$PROJECT_DIR$/advent_of_code_helper/create_new_year.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/advent_of_code_helper/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/advent_of_code_helper/helper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adventofcode_2024/day_4.py" beforeDir="false" afterPath="$PROJECT_DIR$/adventofcode_2024/day_4.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +34,7 @@
     "Python.create_new_year.executor": "Run",
     "Python.day_1.executor": "Debug",
     "Python.day_2.executor": "Debug",
+    "Python.day_4.executor": "Debug",
     "Python.helper.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -92,6 +89,11 @@
           <url>file://$PROJECT_DIR$/advent_of_code_helper/create_new_year.py</url>
           <line>31</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/adventofcode_2024/day_4.py</url>
+          <line>24</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

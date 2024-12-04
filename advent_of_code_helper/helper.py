@@ -35,14 +35,21 @@ def read_lines_strip(file_path):
     return [x.strip('\n') for x in content]
 
 
-def read_lines_strip_split(file_path, split_var: str=' '):
+def read_lines_strip_split(file_path, sep: str= ' '):
     content = read_lines_strip(file_path)
-    return [x.split(split_var) for x in content]
+    return [x.split(sep) for x in content]
 
 
-def read_lines_strip_split_to_int(file_path, split_var: str=' '):
-    content = read_lines_strip_split(file_path, split_var=split_var)
-    return [[int(y) for y in x] for x in content]
+def read_lines_strip_split_to_int(file_path, sep: str= ' '):
+    content = read_lines_strip(file_path)
+    return [int_str2list(x, sep=sep) for x in content]
+
+
+def read_lines_strip_split_and_map(file_path, converter: dict):
+    # For now we use list(x) to convert a string to a list of single characeters
+    # Would be nice to have something like list(x) or .. x.split()
+    content = read_lines_strip(file_path)
+    return [[converter.get(y, None) for y in list(x)] for x in content]
 
 
 def fetch_data(day):
@@ -132,7 +139,7 @@ def update_position(cur_pos, delta_pos):
 
 def get_neighbours(ii, jj, coordinates_visited, max_ii, max_jj, neighbours_found=None):
     """
-    Gets all the neighvours of ii, jj bounded by the coordinates_visited content
+    Gets all the neighbours of ii, jj bounded by the coordinates_visited content
 
     Originates from day 10
 
@@ -174,3 +181,14 @@ def get_neighbours(ii, jj, coordinates_visited, max_ii, max_jj, neighbours_found
             stack_to_visit.append((ii + delta_ii, jj + delta_jj))
             neighbours_found.append((ii, jj))
     return neighbours_found
+
+
+def print_binary(x):
+    for ix in x:
+        line_str = ""
+        for iy in ix:
+            if iy == 1:
+                line_str += Color.RED + "1" + Color.END
+            else:
+                line_str += Color.BLUE + "0" + Color.END
+        print(line_str)
