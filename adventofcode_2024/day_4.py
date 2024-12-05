@@ -57,7 +57,6 @@ test_puzzle_input = helper.read_lines_strip_split_and_map(DDATA_DAY_TEST, conver
 
 chosen_puzzle = puzzle_input
 
-
 kernel_cross = [[1, 0, 10], [0, 100, 0], [1000, 0, 10000]]
 kernel_cross = np.array(kernel_cross)
 

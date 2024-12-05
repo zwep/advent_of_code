@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2db9465b-0781-44c8-a8a7-1db3769751e1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/advent_of_code_helper/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/advent_of_code_helper/helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adventofcode_2024/day_4.py" beforeDir="false" afterPath="$PROJECT_DIR$/adventofcode_2024/day_4.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
