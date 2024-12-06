@@ -187,8 +187,14 @@ def print_binary(x):
     for ix in x:
         line_str = ""
         for iy in ix:
-            if iy == 1:
+            if (iy == 2) or (iy == '2'):
+                line_str += Color.GREEN + "2" + Color.END
+            elif (iy == 1) or (iy == '1'):
                 line_str += Color.RED + "1" + Color.END
-            else:
+            elif (iy == 0) or (iy == '0'):
                 line_str += Color.BLUE + "0" + Color.END
+            elif (iy == '#'):
+                line_str += Color.YELLOW + "#" + Color.END
+            else:
+                line_str += Color.DARKCYAN + "." + Color.END
         print(line_str)
