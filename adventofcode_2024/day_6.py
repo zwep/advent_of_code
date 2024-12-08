@@ -54,11 +54,12 @@ def turn(x):
 def walk_the_walk(current_puzzle, start_direction="^", display=False, stop_at_start=False):
     inside = True
     current_direction = start_direction
-    positions = []
+    positions = {}
     while inside:
         # Get the position
         ix, iy = find_position(current_puzzle, direction=current_direction)
-        positions.append(([ix, iy], current_direction))
+        positions.setdefault((ix,iy), [])
+        positions[(ix, iy)].append(current_direction)
         # Look ahead
         path_ahead = look_ahead(current_puzzle, direction=current_direction)
 
@@ -70,51 +71,37 @@ def walk_the_walk(current_puzzle, start_direction="^", display=False, stop_at_st
             inside = False
         # Store intermediate steps
         current_steps = []
-        for ii in range(1, new_position):
-            if current_direction == '^':
-                temp_position = [ix - ii, iy]
-            elif current_direction == 'v':
-                temp_position = [ix + ii, iy]
-            elif current_direction == '>':
-                temp_position = [ix, iy + ii]
-            elif current_direction == '<':
-                temp_position = [ix, iy - ii]
-            else:
-                print("HO")
-                temp_position = None
-
-            if stop_at_start:
-                if (tuple(temp_position), current_direction) in [(tuple(x[0]), x[1]) for x in positions]:
-                    print("Repeated position ", tuple(temp_position), current_direction)
-                    return positions, 1
-            current_steps.append((temp_position, current_direction))
-        positions.extend(current_steps)
-
-        # get final position
         if current_direction == '^':
-            final_position = [ix - new_position, iy]
+            current_steps = [(ix - ii, iy) for ii in range(1, new_position+1)]
         elif current_direction == 'v':
-            final_position = [ix + new_position, iy]
+            current_steps = [(ix + ii, iy) for ii in range(1, new_position+1)]
         elif current_direction == '>':
-            final_position = [ix, iy + new_position]
+            current_steps = [(ix, iy + ii) for ii in range(1, new_position+1)]
         elif current_direction == '<':
-            final_position = [ix, iy - new_position]
-        else:
-            final_position = None
+            current_steps = [(ix, iy - ii) for ii in range(1, new_position+1)]
 
-        #
-        if stop_at_start:
-            if (final_position, current_direction) in [(tuple(x[0]), x[1]) for x in positions]:
-                print("Repeated position ", tuple(final_position), current_direction)
-                return positions, 1
-        positions.append((final_position, current_direction))
+        for coord in current_steps:
+            if stop_at_start:
+                res = positions.get(coord, None)
+                if res is not None:
+                    if current_direction in res:
+                        print("Repeated position ", tuple(coord), current_direction)
+                        return positions, 1
+
+            positions.setdefault(coord, [])
+            positions[coord].append(current_direction)
+
+        if current_steps:
+            final_position = current_steps[-1]
+        else:
+            final_position = (ix, iy)
         # THis is to display what we are doing
         if display:
             display_puzzle = copy.deepcopy(current_puzzle)
             display_puzzle[ix][iy] = "2"
             print('Current position', ix, iy, current_puzzle[ix][iy])
             print('Path ahead', path_ahead)
-            for x, _ in current_steps:
+            for x in current_steps:
                 display_puzzle[x[0]][x[1]] = "0"
 
             print('New position', final_position)
@@ -151,12 +138,11 @@ Part 1
 """
 part_1_puzzle = copy.deepcopy(chosen_puzzle)
 positions, exit_code = walk_the_walk(part_1_puzzle)
-len(set([tuple(x[0]) for x in positions]))
+print(len(positions))
 
 """
 Part 2
 """
-
 
 current_blokades = []
 for ix, line in enumerate(chosen_puzzle):
@@ -165,34 +151,35 @@ for ix, line in enumerate(chosen_puzzle):
             current_blokades.append((ix, iy))
 
 blokade_positions = []
-for position, direction in positions:
+for position, directions in positions.items():
     possible_position = None
     ix, iy = position
-    if direction == '^':
-        # Look to the right side
-        right_side =look_ahead(chosen_puzzle, direction=">", position=position)
-        if '#' in right_side:
-            # SO in front of us is then a possible position
-            possible_position = [ix - 1, iy]
-    elif direction == '>':
-        right_side =look_ahead(chosen_puzzle, direction="v", position=position)
-        if '#' in right_side:
-            possible_position = [ix, iy + 1]
-    elif direction == 'v':
-        right_side =look_ahead(chosen_puzzle, direction="<", position=position)
-        if '#' in right_side:
-            possible_position = [ix + 1, iy]
-    elif direction == '<':
-        right_side =look_ahead(chosen_puzzle, direction="^", position=position)
-        if '#' in right_side:
-            possible_position = [ix - 1, iy]
+    for direction in directions:
+        if direction == '^':
+            # Look to the right side
+            right_side =look_ahead(chosen_puzzle, direction=">", position=position)
+            if '#' in right_side:
+                # SO in front of us is then a possible position
+                possible_position = [ix - 1, iy]
+        elif direction == '>':
+            right_side =look_ahead(chosen_puzzle, direction="v", position=position)
+            if '#' in right_side:
+                possible_position = [ix, iy + 1]
+        elif direction == 'v':
+            right_side =look_ahead(chosen_puzzle, direction="<", position=position)
+            if '#' in right_side:
+                possible_position = [ix + 1, iy]
+        elif direction == '<':
+            right_side =look_ahead(chosen_puzzle, direction="^", position=position)
+            if '#' in right_side:
+                possible_position = [ix - 1, iy]
 
-    if possible_position:
-        inside_x = 0 <= possible_position[0] < len(chosen_puzzle)
-        inside_y = 0 <= possible_position[1] < len(chosen_puzzle)
-        new_blokade = tuple(possible_position) not in current_blokades
-        if inside_x and inside_y and new_blokade:
-            blokade_positions.append(possible_position)
+        if possible_position:
+            inside_x = 0 <= possible_position[0] < len(chosen_puzzle)
+            inside_y = 0 <= possible_position[1] < len(chosen_puzzle)
+            new_blokade = tuple(possible_position) not in current_blokades
+            if inside_x and inside_y and new_blokade:
+                blokade_positions.append(possible_position)
 
 
 # Get unique blokades
@@ -208,10 +195,10 @@ helper.print_binary(display_puzzle)
 Now lets walk....
 """
 
-temp = [tuple(x[0]) for x in positions if tuple(x[0]) != find_position(chosen_puzzle)]
+temp = [x for x in positions.keys() if x != find_position(chosen_puzzle)]
 
 count = 0
-for extra_blokade in set(temp):
+for extra_blokade in temp:
     extra_blokade_puzzle = copy.deepcopy(chosen_puzzle)
     extra_blokade_puzzle[extra_blokade[0]][extra_blokade[1]] = "#"
     positions, exit_code = walk_the_walk(extra_blokade_puzzle, stop_at_start=True, display=False)

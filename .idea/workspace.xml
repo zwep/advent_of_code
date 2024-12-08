@@ -8,6 +8,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/advent_of_code_helper/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/advent_of_code_helper/helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adventofcode_2024/day_6.py" beforeDir="false" afterPath="$PROJECT_DIR$/adventofcode_2024/day_6.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adventofcode_2024/day_7.py" beforeDir="false" afterPath="$PROJECT_DIR$/adventofcode_2024/day_7.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adventofcode_2024/day_8.py" beforeDir="false" afterPath="$PROJECT_DIR$/adventofcode_2024/day_8.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +38,7 @@
     "Python.day_2.executor": "Debug",
     "Python.day_4.executor": "Debug",
     "Python.day_6.executor": "Debug",
+    "Python.day_8.executor": "Debug",
     "Python.helper.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -97,9 +100,9 @@
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/adventofcode_2024/day_6.py</url>
-          <line>216</line>
-          <option name="timeStamp" value="12" />
+          <url>file://$PROJECT_DIR$/adventofcode_2024/day_8.py</url>
+          <line>55</line>
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
