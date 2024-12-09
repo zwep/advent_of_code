@@ -105,17 +105,5 @@ for k, v in antinodes.items():
 
 
 len(set(all_antinodes))
-# overlap = set(all_antinodes).intersection(set(all_radars))
-# n = len(all_antinodes)
-# # aha, er zijn dubbele...
-# n - len(overlap)
 
-x = list(range(10))
-
-dict(zip(x, x))
-for x,y in zip(x,x):
-    print(x,y)
-
-
-    x == 2 and x== 3
 
