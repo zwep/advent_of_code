@@ -117,14 +117,12 @@ free_space = [int(x) for x in chosen_puzzle[1::2]]
 
 s = 0
 for i, filled in enumerate(filled_space):
+    start_index = sum([int(x) for x in list(chosen_puzzle[:2*i])])
+    n_size = file_blocks[i]
+    print(start_index, n_size)
     if filled:
-        n_size = file_blocks[i]
-        # deze i hier klopt niet.
-        index_file_block = i
-        if i > 0:
-            index_file_block += free_space[i-1]
-        print(index_file_block, n_size)
-        contribution = sum([index_file_block * j for j in range(n_size)])
+        contribution = sum([(start_index + j) * i for j in range(n_size)])
+        print('contribution', contribution)
         s += contribution
 
     index_free_spaces[i]
