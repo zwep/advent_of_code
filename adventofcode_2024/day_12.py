@@ -2,6 +2,9 @@ import numpy as np
 import os
 import re
 import matplotlib
+
+from adventofcode_2020.day4 import string_dicts
+
 matplotlib.use('qt5agg')
 import matplotlib.pyplot as plt
 import advent_of_code_helper.helper as helper
@@ -30,7 +33,7 @@ new_test_puzzle = ["RRRRIICCFF",
 "MIIISIJEEE",
 "MMMISSJEEE"]
 
-chosen_puzzle = new_test_puzzle
+chosen_puzzle = puzzle_input
 
 chosen_puzzle = [list(x) for x in chosen_puzzle]
 n = len(chosen_puzzle)
@@ -40,7 +43,7 @@ import itertools
 
 # Get available moves
 def get_moves(ix, iy):
-    moves = [(ix - 1, iy), (ix + 1, iy), (ix, iy - 1), (ix, iy + 1)]
+    moves = [(step_dir, (ix + step[0], iy + step[1])) for step_dir, step in helper.STEP2POS.items()]
     return moves
 
 index = {k: None for k in itertools.product(range(n), range(n))}
@@ -48,66 +51,46 @@ index_boundary = {}
 positions = list(index.keys())
 group_number = 0
 while len(positions):
-    # print("Group number ", group_number)
+    #print("Group number ", group_number)
     position = positions.pop()
     # print("Position ", position)
     ix, iy = position
     garden_tile = chosen_puzzle[ix][iy]
     index[position] = (group_number, garden_tile)
     neighbours = get_moves(*position)
-    # print("Neighbours ", len(neighbours), neighbours, index_boundary.get(group_number))
-    # Do add their fences
-    for x in neighbours:
-        if not helper.validate_coordinate(x, n):
-            # index_boundary.setdefault(group_number, 0)
-            # index_boundary[group_number] += 1
-            index_boundary.setdefault(group_number, [])
-            index_boundary[group_number].append(x)
-        if index.get(x) is not None:
-            if index.get(x)[0] != group_number:
-                # index_boundary.setdefault(group_number, 0)
-                # index_boundary[group_number] += 1
-                index_boundary.setdefault(group_number, [])
-                index_boundary[group_number].append(x)
 
-    # Now remove them
-    neighbours = [x for x in neighbours if index.get(x, -1) is None]
-    # print("Neighbours ", len(neighbours), neighbours, index_boundary.get(group_number))
     while len(neighbours):
-        neighbour = neighbours.pop()
-        # print("\tNeighbour ", neighbour)
+        step_dir, neighbour = neighbours.pop()
+        # print("\tNeighbour ", neighbour, len(index_boundary.get(group_number, [])))
+        if not helper.validate_coordinate(neighbour, n):
+            # print("\t\tNot valid")
+            index_boundary.setdefault(group_number, [])
+            index_boundary[group_number].append((step_dir, neighbour))
+            continue
+
+        if index.get(neighbour) is not None:
+            # print("\t\tAlready in index")
+            if index.get(neighbour)[0] != group_number:
+                # print("\t\t\tDifferent group")
+                index_boundary.setdefault(group_number, [])
+                index_boundary[group_number].append((step_dir, neighbour))
+
+            continue
+
         jx, jy = neighbour
         other_garden_tile = chosen_puzzle[jx][jy]
         if garden_tile == other_garden_tile:
-            # print("\tIs in Yes", index_boundary.get(group_number))
+            # print("\t\tSame tile")
             # Administration...
             index_neighbour = positions.index(neighbour)
             _ = positions.pop(index_neighbour)
             index[neighbour] = (group_number, garden_tile)
             new_neighbours = get_moves(*neighbour)
-            # print("New neighbours ", len(new_neighbours), new_neighbours, index_boundary.get(group_number))
-            # Do add their fences
-            for x in new_neighbours:
-                if not helper.validate_coordinate(x, n):
-                    # index_boundary.setdefault(group_number, 0)
-                    # index_boundary[group_number] += 1
-                    index_boundary.setdefault(group_number, [])
-                    index_boundary[group_number].append(x)
-                if index.get(x) is not None:
-                    if index.get(x)[0] != group_number:
-                        # index_boundary.setdefault(group_number, 0)
-                        # index_boundary[group_number] += 1
-                        index_boundary.setdefault(group_number, [])
-                        index_boundary[group_number].append(x)
             neighbours.extend(new_neighbours)
-            neighbours = [x for x in neighbours if index.get(x, -1) is None]
-            # print("New neighbours ", len(neighbours), neighbours, index_boundary.get(group_number))
         else:
+            # print("\t\tDifferent tile")
             index_boundary.setdefault(group_number, [])
-            index_boundary[group_number].append(neighbour)
-            # index_boundary.setdefault(group_number, 0)
-            # index_boundary[group_number] += 1
-            # print("\tIs in: No, ", index_boundary.get(group_number))
+            index_boundary[group_number].append((step_dir, neighbour))
     else:
         group_number += 1
 
@@ -130,41 +113,46 @@ This didnt work
 Because Im not counting certain things double neough
 """
 
-new_stuff_thingy = {}
+final_result = {}
 for sel_group in index_boundary.keys():
-    sel_group = 0
-    index_2 = {k: None for k in set(index_boundary[sel_group])}
-    positions_2 = list(index_2.keys())
-    group_number_2 = 0
-    for x, y in positions_2:
-        plt.scatter(x,y)
-    plt.show(block=True)
-    while len(positions_2):
-        #print("Group number ", group_number)
-        position_2 = positions_2.pop()
-        index_2[position_2] = (group_number_2, None)
-        neighbours_2 = get_moves(*position_2)
-        neighbours_2 = [x for x in neighbours_2 if index_2.get(x, -1) is None]
-       # print("Neighbours ", len(neighbours), neighbours)
-        while len(neighbours_2):
-            neighbour_2 = neighbours_2.pop()
-            #print("\tNeighbour ", neighbour)
-            jx, jy = neighbour_2
-            if neighbour_2 in index_2:
-                # Administration...
-                index_neighbour_2 = positions_2.index(neighbour_2)
-                _ = positions_2.pop(index_neighbour_2)
-                index_2[neighbour_2] = (group_number_2, None)
-                new_neighbours_2 = get_moves(*neighbour_2)
+    sel_boundary = index_boundary[sel_group]
+    final_result.setdefault(sel_group, 0)
+    s = 0
+    for step_dir, step in helper.STEP2POS.items():
+        print(step_dir)
+        step_filter_boundary = [x[1] for x in sel_boundary if x[0] == step_dir]
+        if step_dir in ['L', 'R']:
+            # This should be OK for L/R step_dirs
+            min_y = min(step_filter_boundary, key=lambda x: x[1])[1]
+            max_y = max(step_filter_boundary, key=lambda x: x[1])[1]
 
-                neighbours_2.extend(new_neighbours_2)
-                neighbours_2 = [x for x in neighbours_2 if index_2.get(x, -1) is None]
-                #print("New neighbours ", len(neighbours), neighbours)
+            for iy in range(min_y, max_y+1):
+                filter_boundary = sorted([x[0] for x in step_filter_boundary if x[1] == iy])
+                # print(filter_boundary)
+                if len(filter_boundary) == 0:
+                    continue
 
+                difflist = helper.difference_element_list(filter_boundary)
+                size = len([x for x in difflist if x != 1]) + 1
+                s += size
         else:
-            group_number_2 += 1
+            # This should be OK for U/D step_dirs
+            min_x = min(step_filter_boundary, key=lambda x: x[0])[0]
+            max_x = max(step_filter_boundary, key=lambda x: x[0])[0]
 
-    print(sel_group, result[sel_group][0], group_number_2)
-    new_stuff_thingy[sel_group] = group_number_2
+            for ix in range(min_x, max_x + 1):
+                filter_boundary = sorted([x[1] for x in step_filter_boundary if x[0] == ix])
+                # print(filter_boundary)
+                if len(filter_boundary) == 0:
+                    continue
 
-print(new_stuff_thingy)
+                difflist = helper.difference_element_list(filter_boundary)
+                size = len([x for x in difflist if x != 1]) + 1
+                s += size
+
+    final_result[sel_group] = s * len(result[sel_group])
+
+finak_s = 0
+for k, v in final_result.items():
+    print(result[k][0], v)
+    finak_s += v
