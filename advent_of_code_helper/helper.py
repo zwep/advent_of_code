@@ -200,3 +200,8 @@ def print_binary(x):
             else:
                 line_str += iy
         print(line_str)
+
+
+def validate_coordinate(p, upper_bound):
+    if (0 <= p[0] < upper_bound) and (0 <= p[1] < upper_bound):
+        return True
