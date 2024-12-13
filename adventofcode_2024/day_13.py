@@ -17,3 +17,44 @@ _ = helper.fetch_test_data(DAY)
 # read input
 puzzle_input = helper.read_lines_strip(DDATA_DAY)
 test_puzzle_input = helper.read_lines_strip(DDATA_DAY_TEST)
+
+def parse_puzzle(puzzle):
+    problems = []
+    problem = []
+    for iline in puzzle:
+        if iline != '':
+            stepsize = re.findall("([0-9]+)", iline)
+            stepsize = [int(x) for x in stepsize]
+            problem.append(stepsize)
+        else:
+            problems.append(problem)
+            problem = []
+    problems.append(problem)
+
+    return problems
+
+
+def is_int(x, eps):
+    if abs(x - np.round(x)) < eps:
+        return True
+    else:
+        return False
+
+
+cost_A = 3
+cost_B = 1
+
+modifier = 10000000000000
+EPS = 1e-3
+total = 0
+problems = parse_puzzle(puzzle_input)
+for problem in problems:
+    A = np.array(problem[:2]).T
+    b = np.array(problem[-1]) + modifier
+    solution = np.linalg.inv(A.T @ A) @ A.T @ b
+    if is_int(solution[0], EPS) and  is_int(solution[1], EPS):
+        count_A = np.round(solution[0])
+        count_B = np.round(solution[1])
+        total += cost_A * count_A + cost_B * count_B
+
+print(total)
