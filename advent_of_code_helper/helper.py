@@ -191,7 +191,7 @@ def print_binary(x):
                 line_str += Color.GREEN + iy + Color.END
             elif (iy == 1) or (iy == '1'):
                 line_str += Color.RED + iy + Color.END
-            elif (iy == 0) or (iy == '0'):
+            elif (iy == 0) or (iy == '0') or (iy == 'O'):
                 line_str += Color.BLUE + iy + Color.END
             elif (iy == '#'):
                 line_str += Color.YELLOW + iy + Color.END
@@ -205,3 +205,40 @@ def print_binary(x):
 def validate_coordinate(p, upper_bound):
     if (0 <= p[0] < upper_bound) and (0 <= p[1] < upper_bound):
         return True
+
+
+def find_position(A, direction='^'):
+    # direction is the thing we want to find
+    for i, line in enumerate(A):
+        if direction in line:
+            j = line.index(direction)
+            return i, j
+
+
+def find_positions(A, marker):
+    all_positions = []
+    for i, line in enumerate(A):
+        for j, entry in enumerate(line):
+            if entry == marker:
+                all_positions.append((i, j))
+    return all_positions
+
+
+def look_ahead(A, direction, position=None):
+    if position is None:
+        ix, iy = find_position(A, direction)
+    else:
+        ix, iy = position
+    if direction in ['^', 'v']:
+        path = get_column(A, iy)
+        if direction == '^':
+            path = path[:ix][::-1]
+        else:  # direction == 'v'
+            path = path[ix+1:]
+    else: # ['>', '<']:
+        path = A[ix]
+        if direction == '>':
+            path = path[iy+1:]
+        else:
+            path = path[:iy][::-1]
+    return path

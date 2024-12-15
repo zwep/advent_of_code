@@ -9,13 +9,13 @@ from advent_of_code_helper.configuration import DDATA_YEAR
 DAY = "13"
 DDATA_DAY = os.path.join(DDATA_YEAR, DAY + '.txt')
 DDATA_DAY_TEST = os.path.join(DDATA_YEAR, DAY + '_test.txt')
+DDATA_CELINE = os.path.join(DDATA_YEAR, '13_celine.txt')
 
 # Run get data..
 _ = helper.fetch_data(DAY)
 _ = helper.fetch_test_data(DAY)
-
 # read input
-puzzle_input = helper.read_lines_strip(DDATA_DAY)
+puzzle_input = helper.read_lines_strip(DDATA_CELINE)
 test_puzzle_input = helper.read_lines_strip(DDATA_DAY_TEST)
 
 def parse_puzzle(puzzle):
