@@ -14,14 +14,14 @@ DDATA_DAY_TEST_2 = os.path.join(DDATA_YEAR, DAY + '_test_2.txt')
 DDATA_DAY_TEST_3 = os.path.join(DDATA_YEAR, DAY + '_test_3.txt')
 
 # Run get data..
-_ = helper.fetch_data(DAY)
-_ = helper.fetch_test_data(DAY)
-
-# read input
-puzzle_input = helper.read_lines_strip(DDATA_DAY)
+# _ = helper.fetch_data(DAY)
+# _ = helper.fetch_test_data(DAY)
+#
+# # read input
+# puzzle_input = helper.read_lines_strip(DDATA_DAY)
 test_puzzle_input = helper.read_lines_strip(DDATA_DAY_TEST)
-test_puzzle_input_2 = helper.read_lines_strip(DDATA_DAY_TEST_2)
-test_puzzle_input_3 = helper.read_lines_strip(DDATA_DAY_TEST_3)
+# test_puzzle_input_2 = helper.read_lines_strip(DDATA_DAY_TEST_2)
+# test_puzzle_input_3 = helper.read_lines_strip(DDATA_DAY_TEST_3)
 
 
 def parse_puzzle(puzzle):
@@ -38,7 +38,7 @@ def substitute_puzzle(puzzle, new_str, direction, position):
         local_counter = 0
         for i, i_line in enumerate(puzzle):
             if (direction == '^') and (i < ix) and (local_counter < len(new_str)):
-                i_line[iy] = new_str[len(new_str)-local_counter-1]
+                i_line[iy] = new_str[::-1][local_counter]
                 local_counter += 1
             if (direction == 'v') and (i > ix) and (local_counter < len(new_str)):
                 i_line[iy] = new_str[local_counter]
@@ -172,7 +172,7 @@ while len(moves):
         if move in ['v', '^']:
             filtered_allowed_positions = []
             for position in allowed_positions:
-                if wide_area[position[0]][position[1]] == '.':
+                if wide_area[position[0]][position[1]] in ['.', '@']:
                     filtered_allowed_positions.append(position)
             # This was not good enough
             # column_levels = set([x[1] for x in allowed_positions])
@@ -186,6 +186,7 @@ while len(moves):
             allowed_positions = filtered_allowed_positions
         else:
             pass
+
         for position in allowed_positions:
             substitution = positions_and_substitutions[position]
             substitute_puzzle(wide_area, new_str=substitution, direction=move, position=position)
