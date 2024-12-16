@@ -22,6 +22,7 @@ _ = helper.fetch_test_data(DAY)
 puzzle_input = helper.read_lines_strip(DDATA_DAY)
 test_puzzle_input = helper.read_lines_strip(DDATA_DAY_TEST)
 
+<<<<<<< HEAD
 new_test_puzzle = ["RRRRIICCFF",
 "RRRRIICCCF",
 "VVRRRCCFFF",
@@ -156,3 +157,6 @@ finak_s = 0
 for k, v in final_result.items():
     print(result[k][0], v)
     finak_s += v
+=======
+# Flooooood
+>>>>>>> 9a8cae5 (stuff)
