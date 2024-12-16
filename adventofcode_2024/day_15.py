@@ -45,9 +45,9 @@ def substitute_puzzle(puzzle, new_str, direction, position):
                 local_counter += 1
     else:  # ['>', '<']:
         if direction == '>':
-            puzzle[ix][iy + 1:] = new_str
+            puzzle[ix][iy + 1:iy +1 + len(new_str)] = new_str
         else:
-            puzzle[ix][: iy] = new_str[::-1]
+            puzzle[ix][iy-len(new_str):iy] = new_str[::-1]
     return puzzle
 
 
@@ -72,32 +72,32 @@ def get_wide_area(area):
 chosen_puzzle = test_puzzle_input
 area, moves = parse_puzzle(chosen_puzzle)
 
-
-
-print("Initial state")
-for move in moves:
-    helper.print_binary(area)
-    print("Move ", move)
-    current_position = helper.find_position(area, "@")
-    ahead = helper.look_ahead(area, direction=move, position=current_position)
-    wall_piece = ahead.index("#")
-    if '.' in ahead:
-        empty_piece = ahead.index(".")
-    else:
-        continue
-
-    if empty_piece < wall_piece:
-        # There is room!
-        new_ahead = ["@"] + list(ahead[:empty_piece]) + list(ahead[empty_piece+1:])
-        # Now substitute that piece into the puzzle again and start over
-        substitute_puzzle(area, new_str=new_ahead, direction=move, position=current_position)
-        area[current_position[0]][current_position[1]] = "."
-    else:
-        # No..
-        continue
-
-box_positions = helper.find_positions(area, marker='O')
-sum([x[0] * 100 + x[1] for x in box_positions])
+#
+#
+# print("Initial state")
+# for move in moves:
+#     helper.print_binary(area)
+#     print("Move ", move)
+#     current_position = helper.find_position(area, "@")
+#     ahead = helper.look_ahead(area, direction=move, position=current_position)
+#     wall_piece = ahead.index("#")
+#     if '.' in ahead:
+#         empty_piece = ahead.index(".")
+#     else:
+#         continue
+#
+#     if empty_piece < wall_piece:
+#         # There is room!
+#         new_ahead = ["@"] + list(ahead[:empty_piece]) + list(ahead[empty_piece+1:])
+#         # Now substitute that piece into the puzzle again and start over
+#         substitute_puzzle(area, new_str=new_ahead, direction=move, position=current_position)
+#         area[current_position[0]][current_position[1]] = "."
+#     else:
+#         # No..
+#         continue
+#
+# box_positions = helper.find_positions(area, marker='O')
+# sum([x[0] * 100 + x[1] for x in box_positions])
 
 """
 Part 2
@@ -110,8 +110,8 @@ wide_area = get_wide_area(area)
 print("Initial state")
 while len(moves):
     move = moves.pop(0)
-    # helper.print_binary(wide_area)
-    # print("Move ", move)
+    helper.print_binary(wide_area)
+    print("Move ", move)
     current_position = helper.find_position(wide_area, "@")
     to_check_positions = [current_position]
     ok_or_not_okay = []
@@ -156,7 +156,7 @@ while len(moves):
             if current_position == to_check_position:
                 new_tile = "@"
 
-            new_ahead = [new_tile] + push_part + list(ahead[empty_piece+1:])
+            new_ahead = [new_tile] + push_part # + list(ahead[empty_piece+1:])
             ok_or_not_okay.append(True)
             positions_and_substitutions[to_check_position] = new_ahead
         else:
