@@ -9,6 +9,7 @@ DIR2POS = {'N': [-1, 0], 'E': [0, 1], 'S': [1, 0], 'W': [0, -1]}
 STEP2POS = {'U': [-1, 0], 'R': [0, 1], 'D': [1, 0], 'L': [0, -1]}
 DIR2STEP = {'N': 'U', 'E': 'R', 'S': 'D', 'W': 'L'}
 STEP2DIR = {v: k for k, v in DIR2STEP.items()}
+STEP2REV = {'U': 'D', 'R': 'L', 'D': 'U', 'L': 'R'}
 
 
 class Color:
@@ -182,6 +183,16 @@ def get_neighbours(ii, jj, coordinates_visited, max_ii, max_jj, neighbours_found
             neighbours_found.append((ii, jj))
     return neighbours_found
 
+
+# Get available moves
+def get_dir_and_moves(ix, iy):
+    moves = [(step_dir, (ix + step[0], iy + step[1])) for step_dir, step in STEP2POS.items()]
+    return moves
+
+# Get available moves
+def get_moves(ix, iy):
+    moves = [(ix + step[0], iy + step[1]) for step_dir, step in STEP2POS.items()]
+    return moves
 
 def print_binary(x):
     for ix in x:

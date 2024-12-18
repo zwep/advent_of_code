@@ -41,10 +41,6 @@ n = len(chosen_puzzle)
 pools = {}
 import itertools
 
-# Get available moves
-def get_moves(ix, iy):
-    moves = [(step_dir, (ix + step[0], iy + step[1])) for step_dir, step in helper.STEP2POS.items()]
-    return moves
 
 index = {k: None for k in itertools.product(range(n), range(n))}
 index_boundary = {}
@@ -57,7 +53,7 @@ while len(positions):
     ix, iy = position
     garden_tile = chosen_puzzle[ix][iy]
     index[position] = (group_number, garden_tile)
-    neighbours = get_moves(*position)
+    neighbours = helper.get_moves(*position)
 
     while len(neighbours):
         step_dir, neighbour = neighbours.pop()
@@ -85,7 +81,7 @@ while len(positions):
             index_neighbour = positions.index(neighbour)
             _ = positions.pop(index_neighbour)
             index[neighbour] = (group_number, garden_tile)
-            new_neighbours = get_moves(*neighbour)
+            new_neighbours = helper.get_moves(*neighbour)
             neighbours.extend(new_neighbours)
         else:
             # print("\t\tDifferent tile")

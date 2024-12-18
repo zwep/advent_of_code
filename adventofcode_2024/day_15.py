@@ -37,10 +37,10 @@ def substitute_puzzle(puzzle, new_str, direction, position):
     if direction in ['^', 'v']:
         local_counter = 0
         for i, i_line in enumerate(puzzle):
-            if (direction == '^') and (i < ix) and (local_counter < len(new_str)):
-                i_line[iy] = new_str[len(new_str)-local_counter-1]
+            if (direction == '^') and ((ix - len(new_str)) <= i < ix) and (local_counter < len(new_str)):
+                i_line[iy] = new_str[::-1][local_counter]
                 local_counter += 1
-            if (direction == 'v') and (i > ix) and (local_counter < len(new_str)):
+            if (direction == 'v') and ((ix + len(new_str)) >= i > ix) and (local_counter < len(new_str)):
                 i_line[iy] = new_str[local_counter]
                 local_counter += 1
     else:  # ['>', '<']:
@@ -68,6 +68,15 @@ def get_wide_area(area):
         new_area.append(new_line)
     return new_area
 
+
+
+def check_puzzle(puzzle):
+    for iline in puzzle:
+        for i, itile in enumerate(iline):
+            if itile == '[':
+                if iline[i+1] != ']':
+                    return False
+    return True
 
 chosen_puzzle = test_puzzle_input
 area, moves = parse_puzzle(chosen_puzzle)
@@ -106,12 +115,22 @@ Part 2
 chosen_puzzle = test_puzzle_input
 area, moves = parse_puzzle(chosen_puzzle)
 wide_area = get_wide_area(area)
-
+# moves = moves[:10]£
 print("Initial state")
+move_counter = 0
 while len(moves):
     move = moves.pop(0)
-    helper.print_binary(wide_area)
-    print("Move ", move)
+    #
+    # # helper.print_binary(wide_area)
+    # print("Move ", move)
+    #
+    # move_counter += 1
+    # if move_counter > 2968-2:
+    #     helper.print_binary(wide_area)
+    # if check_puzzle(wide_area) is False:
+    #     print("Movecounter", move_counter)
+    #     break
+
     current_position = helper.find_position(wide_area, "@")
     to_check_positions = [current_position]
     ok_or_not_okay = []
@@ -130,20 +149,29 @@ while len(moves):
         if empty_piece < wall_piece:
             # There is atleast some room!
             push_part = list(ahead[:empty_piece])
-            # Only do this when we go up or down?
+            # Create a substitution string
+            new_tile = "."
+            if current_position == to_check_position:
+                new_tile = "@"
+            # Say all is OK
+            new_ahead = [new_tile] + push_part
+            ok_or_not_okay.append(True)
+            positions_and_substitutions[to_check_position] = new_ahead
+
+            # Now check if there are more positions to check
             if move in ['v', '^']:
                 # Check if there are more positions to check
-                for i, push in enumerate(push_part):
+                for offset, push in enumerate(push_part):
                     if push == '[':
                         if move == "^":
-                            check_position = (to_check_position[0]-i, to_check_position[1] + 1)
+                            check_position = (to_check_position[0]-offset, to_check_position[1] + 1)
                         else:  # "v"
-                            check_position = (to_check_position[0]+i, to_check_position[1] + 1)
+                            check_position = (to_check_position[0]+offset, to_check_position[1] + 1)
                     elif push == ']':
                         if move == "^":
-                            check_position = (to_check_position[0]-i, to_check_position[1] - 1)
+                            check_position = (to_check_position[0]-offset, to_check_position[1] - 1)
                         else:  # "v"
-                            check_position = (to_check_position[0]+i, to_check_position[1] - 1)
+                            check_position = (to_check_position[0]+offset, to_check_position[1] - 1)
                     else:
                         continue
 
@@ -152,38 +180,38 @@ while len(moves):
                     if check_position not in positions_and_substitutions:
                         to_check_positions.append(check_position)
 
-            new_tile = "."
-            if current_position == to_check_position:
-                new_tile = "@"
-
-            new_ahead = [new_tile] + push_part # + list(ahead[empty_piece+1:])
-            ok_or_not_okay.append(True)
-            positions_and_substitutions[to_check_position] = new_ahead
         else:
             # No..
             ok_or_not_okay.append(False)
             continue
 
-    # check the positions and substitutions..?
-    # Only apply those that are the lowest when going upwards
-    # Or the lowest when going down...
+    # Can all the positions move?
     if all(ok_or_not_okay):
         allowed_positions = list(positions_and_substitutions.keys())
+        print("Allowed positions ", allowed_positions)
         if move in ['v', '^']:
+            # Use only those that have a . or a @ at their position
             filtered_allowed_positions = []
-            for position in allowed_positions:
-                if wide_area[position[0]][position[1]] == '.':
-                    filtered_allowed_positions.append(position)
             # This was not good enough
-            # column_levels = set([x[1] for x in allowed_positions])
-            # for column_level in column_levels:
-            #     temp = [x for x in allowed_positions if x[1] == column_level]
-            #     if move == 'v':
-            #         single_position = min(temp, key = lambda x: x[0])
-            #     else:  # "^"
-            #         single_position = max(temp, key=lambda x: x[0])
-            #     filtered_allowed_positions.append(single_position)
+            # for position in allowed_positions:
+            #     if wide_area[position[0]][position[1]] in ['.', '@']:
+            #         filtered_allowed_positions.append(position)
+            # This was not good enough
+            column_levels = set([x[1] for x in allowed_positions])
+            for column_level in column_levels:
+                # Select in one column
+                temp = sorted([x for x in allowed_positions if x[1] == column_level])
+                if move == '^':
+                    temp = temp[::-1]
+                # Select all the row values
+                temp_row = [x[0] for x in temp]
+                # Get the difference of the row positions
+                diff_temp = helper.difference_element_list(temp_row)
+                # Recalculate the index
+                index_to_choose = [0] + [i+1 for i, x in enumerate(diff_temp) if abs(x) > 1]
+                filtered_allowed_positions.extend([temp[ii] for ii in index_to_choose])
             allowed_positions = filtered_allowed_positions
+            print("\t\tAllowed positions ", allowed_positions)
         else:
             pass
         for position in allowed_positions:
@@ -197,3 +225,5 @@ print(sum([x[0] * 100 + x[1] for x in left_boxes]))
 
 # 1469407 too low
 # 1471174 too low
+# 1442479
+# 1489116
