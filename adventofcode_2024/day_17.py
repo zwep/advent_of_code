@@ -145,36 +145,155 @@ test_puzzle_input = helper.read_lines_strip(DDATA_DAY_TEST)
 test_puzzle_input_2 = helper.read_lines_strip(DDATA_DAY_TEST_2)
 
 
+chosen_puzzle = puzzle_input
+REGISTER_BACKUP, program = parse_puzzle(chosen_puzzle)
 
-def solve_this(target, use_A):
-    if use_A:
-        value_reg_A = REGISTER['A']
-    for x in range(8):
-        if not use_A:
-            value_reg_A = x
-        y = (x ^ 1 ^ 5 ^ int(value_reg_A / 2 ** (value_reg_A ^ 1))) % 8
-        if y == target:
-            return x
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] =i
+    stdout = run_program(program)
+    print(i, stdout)
+# --> it is 4
+
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = 4 * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+
+# --> it is 5 or 7
+
+# is it 5? it is
+# is it 7? no
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = (4 * 8 + 5) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# --> it is 3
+
+
+# is it... 5?
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = ((4 * 8 + 5) * 8 + 3) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# choose 2
+
+
+# is it... 3?
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = (((4 * 8 + 5) * 8 + 3) * 8 + 2) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# choose 3
+
+# is it 0?
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = ((((4 * 8 + 5) * 8 + 3) * 8 + 2) * 8 + 3) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# choose 0 or 5
+
+
+# is it 5?
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = (((((4 * 8 + 5) * 8 + 3) * 8 + 2) * 8 + 3) * 8 + 0) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# if 0 then choose 5
+# if 5 then choose 3
+
+
+# we want 4 (choosing ... 5)
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = ((((((4 * 8 + 5) * 8 + 3) * 8 + 2) * 8 + 3) * 8 + 0) * 8 + 5) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# choose 1
+
+
+# we want 5 (choosing 1)
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = (((((((4 * 8 + 5) * 8 + 3) * 8 + 2) * 8 + 3) * 8 + 0) * 8 + 5) * 8 + 1) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# choose 3
+
+
+# we want 1 (choosing 3)
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = ((((((((4 * 8 + 5) * 8 + 3) * 8 + 2) * 8 + 3) * 8 + 0) * 8 + 5) * 8 + 1) * 8 + 3) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# choose 3
+
+
+# we want 5 (choosing 3)
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = (((((((((4 * 8 + 5) * 8 + 3) * 8 + 2) * 8 + 3) * 8 + 0) * 8 + 5) * 8 + 1) * 8 + 3) * 8 + 3) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# choose 2
+
+
+# we want 7 (choosing 2)
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = ((((((((((4 * 8 + 5) * 8 + 3) * 8 + 2) * 8 + 3) * 8 + 0) * 8 + 5) * 8 + 1) * 8 + 3) * 8 + 3) * 8 + 2) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# choose 6
+
+
+# we want 1 (choosing 6)
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = (((((((((((4 * 8 + 5) * 8 + 3) * 8 + 2) * 8 + 3) * 8 + 0) * 8 + 5) * 8 + 1) * 8 + 3) * 8 + 3) * 8 + 2) * 8 + 6) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# choose 7
+
+
+# we want 1 (choosing 7)
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = ((((((((((((4 * 8 + 5) * 8 + 3) * 8 + 2) * 8 + 3) * 8 + 0) * 8 + 5) * 8 + 1) * 8 + 3) * 8 + 3) * 8 + 2) * 8 + 6) * 8 + 7) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# choose 2
+
+
+# we want 4 (choosing 2)
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = (((((((((((((4 * 8 + 5) * 8 + 3) * 8 + 2) * 8 + 3) * 8 + 0) * 8 + 5) * 8 + 1) * 8 + 3) * 8 + 3) * 8 + 2) * 8 + 6) * 8 + 7) * 8 + 2) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# choose 0
+
+
+# we want 2 (choosing 0 (X), 1(X), 2(X), 5(X) ,7)
+for i in range(8):
+    REGISTER = copy.deepcopy(REGISTER_BACKUP)
+    REGISTER['A'] = ((((((((((((((4 * 8 + 5) * 8 + 3) * 8 + 2) * 8 + 3) * 8 + 0) * 8 + 5) * 8 + 1) * 8 + 3) * 8 + 3) * 8 + 2) * 8 + 6) * 8 + 7) * 8 + 2) * 8 + 7) * 8 + i
+    stdout = run_program(program)
+    print(i, stdout)
+# choose 5
+
+final_result = ((((((((((((((4 * 8 + 5) * 8 + 3) * 8 + 2) * 8 + 3) * 8 + 0) * 8 + 5) * 8 + 1) * 8 + 3) * 8 + 3) * 8 + 2) * 8 + 6) * 8 + 7) * 8 + 2) * 8 + 7) * 8 + 5
 
 
 chosen_puzzle = puzzle_input
 REGISTER_BACKUP, program = parse_puzzle(chosen_puzzle)
-
 REGISTER = copy.deepcopy(REGISTER_BACKUP)
+REGISTER['A'] = final_result
 stdout = run_program(program)
-REGISTER = copy.deepcopy(REGISTER_BACKUP)
-prev_result = None
-result = None
-
-while len(program):
-    x = program.pop()
-    print(x)
-    if prev_result is not None:
-        result = result + 8 * prev_result
-    if result is not None:
-        REGISTER = copy.deepcopy(REGISTER_BACKUP)
-        REGISTER['A'] = result
-        prev_result = result
-
-    result = solve_this(x, result is None)
-    print('result ', result)
