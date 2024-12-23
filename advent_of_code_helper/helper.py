@@ -110,6 +110,10 @@ def int_str2list(int_str, sep=None):
     return list(map(int, int_str.split(sep)))
 
 
+def list_compare(x, y):
+    return all([ix == iy for ix, iy in zip(x,y )])
+
+
 def get_column(input_list, col_index, to_str=False):
     if to_str:
         return ''.join([i_line[col_index] for i_line in input_list])
