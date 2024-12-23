@@ -115,22 +115,12 @@ Part 2
 chosen_puzzle = test_puzzle_input
 area, moves = parse_puzzle(chosen_puzzle)
 wide_area = get_wide_area(area)
-# moves = moves[:10]£
+
 print("Initial state")
-move_counter = 0
 while len(moves):
     move = moves.pop(0)
-    #
-    # # helper.print_binary(wide_area)
-    # print("Move ", move)
-    #
-    # move_counter += 1
-    # if move_counter > 2968-2:
-    #     helper.print_binary(wide_area)
-    # if check_puzzle(wide_area) is False:
-    #     print("Movecounter", move_counter)
-    #     break
-
+    helper.print_binary(wide_area)
+    print("Move ", move)
     current_position = helper.find_position(wide_area, "@")
     to_check_positions = [current_position]
     ok_or_not_okay = []
@@ -180,6 +170,13 @@ while len(moves):
                     if check_position not in positions_and_substitutions:
                         to_check_positions.append(check_position)
 
+            new_tile = "."
+            if current_position == to_check_position:
+                new_tile = "@"
+
+            new_ahead = [new_tile] + push_part # + list(ahead[empty_piece+1:])
+            ok_or_not_okay.append(True)
+            positions_and_substitutions[to_check_position] = new_ahead
         else:
             # No..
             ok_or_not_okay.append(False)
