@@ -10,10 +10,10 @@ DAY = "10"
 DDATA_DAY = os.path.join(DDATA_YEAR, DAY + '.txt')
 DDATA_DAY_TEST = os.path.join(DDATA_YEAR, DAY + '_test.txt')
 
-# Run get data..
-_ = helper.fetch_data(DAY)
-_ = helper.fetch_test_data(DAY)
+# Run get data...
+#_ = helper.fetch_data(DAY)
+#_ = helper.fetch_test_data(DAY)
 
 # read input
-puzzle_input = helper.read_lines_strip(DDATA_DAY)
+#puzzle_input = helper.read_lines_strip(DDATA_DAY)
 test_puzzle_input = helper.read_lines_strip(DDATA_DAY_TEST)
