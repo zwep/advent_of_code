@@ -1,7 +1,5 @@
 import numpy as np
 import os
-import re
-import matplotlib.pyplot as plt
 import advent_of_code_helper.helper as helper
 from advent_of_code_helper.configuration import DDATA_YEAR
 
@@ -10,38 +8,53 @@ DAY = "10"
 DDATA_DAY = os.path.join(DDATA_YEAR, DAY + '.txt')
 DDATA_DAY_TEST = os.path.join(DDATA_YEAR, DAY + '_test.txt')
 
-# Run get data..
-_ = helper.fetch_data(DAY)
-_ = helper.fetch_test_data(DAY)
+# Run get data...
+#_ = helper.fetch_data(DAY)
+#_ = helper.fetch_test_data(DAY)
 
 # read input
 puzzle_input = helper.read_lines_strip(DDATA_DAY)
 test_puzzle_input = helper.read_lines_strip(DDATA_DAY_TEST)
 
-def process_position(position):
+# find position
+# start walking / making moves...
+# return if we are at 9
+#
+
+chosen_puzzle = puzzle_input
+AREA_MAP = [[int(x) for x in list(y)] for y in chosen_puzzle]
+
+def validate_step_size(position, current_height):
+    new_height = AREA_MAP[position[0]][position[1]]
+    return (new_height - current_height) == 1
+
+def get_trail_heads(position):
     ix, iy = position
-    print(position)
-    current_level = area_map[ix][iy]
-    possible_levels = []
-    for x in helper.get_moves(ix, iy):
-        if helper.validate_coordinate(x, len(area_map)):
-            print(x)
-            if (area_map[x[0]][x[1]] - current_level) == 1:
-                possible_levels.append((area_map[x[0]][x[1]], x))
-    possible_trails = 0
-    for level, step in possible_levels:
-        if level == 9:
-            possible_trails += 1
+    current_height = AREA_MAP[ix][iy]
+    possible_moves = helper.get_moves(*position)
+    possible_moves = [x for x in possible_moves if helper.validate_coordinate(x, len(AREA_MAP))]
+    possible_moves = [x for x in possible_moves if validate_step_size(x, current_height)]
+    trail_heads = 0
+    for new_position in possible_moves:
+        # I already know this
+        new_height = AREA_MAP[new_position[0]][new_position[1]]
+        if new_height == 9:
+            #print('\t\t', trail_heads)
+            trail_heads += 1
+            if new_position not in TRAIL_HEAD_MAP:
+                TRAIL_HEAD_MAP[new_position] = 1
         else:
-            new_position = helper.update_position(position, step)
-            print(position, step, new_position)
-            process_position(new_position)
+            #print(new_height, new_position)
+            trail_heads += get_trail_heads(new_position)
 
-    return possible_trails
+    return trail_heads
 
-chosen_puzzle = test_puzzle_input
-area_map = [[int(x) for x in y] for y in chosen_puzzle]
-starting_positions = helper.find_positions(area_map, 0)
-for start_position in starting_positions:
-    z = process_position(start_position)
-    print(z)
+starting_positions = helper.find_positions(AREA_MAP, 0)
+
+total = 0
+for i_start in starting_positions:
+    TRAIL_HEAD_MAP = {}
+    temp = get_trail_heads(i_start)
+    total += temp #len(TRAIL_HEAD_MAP)
+
+print(total)

@@ -10,6 +10,7 @@ STEP2POS = {'U': [-1, 0], 'R': [0, 1], 'D': [1, 0], 'L': [0, -1]}
 DIR2STEP = {'N': 'U', 'E': 'R', 'S': 'D', 'W': 'L'}
 STEP2DIR = {v: k for k, v in DIR2STEP.items()}
 STEP2REV = {'U': 'D', 'R': 'L', 'D': 'U', 'L': 'R'}
+STEPS = {'U', 'D', 'L', 'R'}
 
 
 class Color:
