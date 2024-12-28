@@ -12,8 +12,8 @@ DDATA_DAY_TEST = os.path.join(DDATA_YEAR, DAY + '_test.txt')
 DDATA_DAY_TEST_2 = os.path.join(DDATA_YEAR, DAY + '_test_2.txt')
 
 # Run get data..
-#_ = helper.fetch_data(DAY)
-#_ = helper.fetch_test_data(DAY)
+_ = helper.fetch_data(DAY)
+_ = helper.fetch_test_data(DAY)
 
 # read input
 puzzle_input = helper.read_lines_strip(DDATA_DAY)
@@ -48,13 +48,15 @@ start_position = helper.find_position(chosen_puzzle, 'S')
 end_position = helper.find_position(chosen_puzzle, 'E')
 
 upper_bound = len(chosen_puzzle[0])
-
+MAX_DIST = int(1e10)
 # Initialize the cost dicitonary
 possible_positions = helper.find_positions(chosen_puzzle, '.')
 cost = {}
+previous = {}
 for k in possible_positions + [start_position, end_position]:
     for i_dir in ['L', 'R', 'U', 'D']:
-        cost.update({(i_dir, k) : int(1e10)})
+        cost.update({(i_dir, k) : MAX_DIST})
+        previous.update({(i_dir, k): []})
 
 # Precompute these, will probably speed up stuff: not that much
 neighbour_search = {}
@@ -64,46 +66,56 @@ for k, _ in cost.items():
     neighbour_search[k] = neighbours
 
 # Initialize the to_visit list
-to_visit = list(cost.keys())
+# to_visit = set(cost.keys())
 cost[('R', start_position)] = 0
-visited = []
+visited = set()
+to_visit = set()
+to_visit.add(('R', start_position))
 
 while len(to_visit):
     print(len(to_visit), end='\r')
-    mincost, (direction, position) = min([(cost[x], x) for x in to_visit])
-    if mincost == 1e10:
+    min_cost, (direction, position) = min([(cost[x], x) for x in to_visit], key=lambda x: x[0])
+    # min_cost = cost[(direction, position)]
+    if min_cost == MAX_DIST:
         break
-    index_position = to_visit.index((direction, position))
-    _ = to_visit.pop(index_position)
-    visited.append((direction, position))
-    # print('In node ', direction, position, 'remaining to visit ', to_visit)
+
     neighbours = neighbour_search[(direction, position)]
-    neighbours = [x for x in neighbours if x in to_visit]
+    neighbours = [x for x in neighbours if x not in visited]
     for step_dir, neighbour in neighbours:
         if step_dir == direction:
             current_cost = 1
         else:
             current_cost = 1000
 
-        # print(direction, position, '-->', step_dir, neighbour, ': ', current_cost)
         # Store both the direction and the neighbor number in there
         if (step_dir, neighbour) in cost:
             # Take the minimum between the cost that we know and the new cost
             cost[(step_dir, neighbour)] = min(cost[(step_dir, neighbour)], current_cost + cost[(direction, position)])
+            previous[(step_dir, neighbour)].append((direction, position))
         else:
             cost.setdefault((step_dir, neighbour), current_cost + cost[(direction, position)])
 
-        if (step_dir, neighbour) in to_visit:
-            continue
-
         if (step_dir, neighbour) in visited:
             continue
-        # Only add when we are not already planning on visiting it
-        # And when we have not already visited it
-        to_visit.append((step_dir, neighbour))
 
-min_cost = min([cost.get((x, end_position)) for x in helper.STEPS])
-print(min_cost)
+        to_visit.add((step_dir, neighbour))
+    to_visit.remove((direction, position))
+    visited.add((direction, position))
+
+end_dir, min_cost = min([(x, cost.get((x, end_position))) for x in helper.STEPS],key=lambda x: x[1])
+print(end_dir, min_cost)
+
+
+eehm = set()
+to_look_after = [(end_dir, end_position)]
+while len(to_look_after):
+    temp_dir, temp_pos = to_look_after.pop()
+    if temp_pos not in eehm:
+        eehm.add(temp_pos)
+    to_look_after.extend(previous[(temp_dir, temp_pos)])
+
+len(eehm)
+
 #
 # 129468 -- too high
 # 127520

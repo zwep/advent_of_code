@@ -218,9 +218,13 @@ def print_binary(x):
         print(line_str)
 
 
-def validate_coordinate(p, upper_bound):
-    if (0 <= p[0] < upper_bound) and (0 <= p[1] < upper_bound):
+def validate_coordinate(p, upper_bound_x, upper_bound_y=None):
+    if upper_bound_y is None:
+        upper_bound_y = upper_bound_x
+    if (0 <= p[0] < upper_bound_x) and (0 <= p[1] < upper_bound_y):
         return True
+    else:
+        return False
 
 
 def find_position(A, direction='^'):
