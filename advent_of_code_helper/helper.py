@@ -262,3 +262,7 @@ def look_ahead(A, direction, position=None):
         else:
             path = path[:iy][::-1]
     return path
+
+
+def get_manhattan_distance(x, y):
+    return sum([abs(ix - iy) for ix, iy in zip(x,y)])

@@ -135,35 +135,57 @@ N = len(area_map)
 M = len(area_map[0])
 
 timings = {}
-base_line_costs = {}
-import copy
-z = None
-win_count = 0
-cheat_positions = get_cheat_positions(area_map)
-for ii, cheat_position in enumerate([None] + cheat_positions):
-    print(ii, end='\r')
-    area_map_copy = copy.deepcopy(area_map)
-    if cheat_position is not None:
-        z = get_advantage(cheat_position, base_line_costs)
-        if z >= 100:
-            win_count += 1
-        continue
+base_line_costs = get_time(area_map, None)
+end_position = helper.find_position(area_map, 'E')
+timings[None] = base_line_costs[end_position]
 
-    end_position = helper.find_position(area_map, 'E')
-    total_cost = get_time(area_map_copy, cheat_position)
-    timings[cheat_position] = total_cost[end_position]
-    if cheat_position is None:
-        base_line_costs.update(total_cost)
-
-    print(z, timings[None] - timings[cheat_position])
+# Part 1
+# import copy
+# win_count = 0
+# cheat_positions = get_cheat_positions(area_map)
+# for ii, cheat_position in enumerate(cheat_positions):
+#     print(ii, end='\r')
+#     area_map_copy = copy.deepcopy(area_map)
+#     advantage = get_advantage(cheat_position, base_line_costs)
+#     if advantage >= 100:
+#         win_count += 1
 
 """
 Kay.. Part 2
 
 From every position in the cost matrix with a "finite" cost
-- Select all points that cost 100 less than the default case..? - Yeah something like this
+- Select all other points that cost 100 less than the default case..? - Yeah something like this
 - Check if they are within 20 positions
 - ...
 - profit..?
 
 """
+
+# Check base line
+for pos, _ in base_line_costs.items():
+    print(pos, area_map[pos[0]][pos[1]])
+
+
+end_position = helper.find_position(area_map, 'E')
+start_position = helper.find_position(area_map, 'S')
+
+winning = {}
+for position, cost in base_line_costs.items():
+    if helper.list_compare(position, start_position):# or helper.list_compare(position, start_position):
+        continue  # Skip these for now...? Or only do the end position?
+
+    potential_positions = [x for x, y in base_line_costs.items() if (abs(cost - y)) >= 100]
+    for potential_position in potential_positions:
+        manhatan_distance = helper.get_manhattan_distance(position, potential_position)
+        if manhatan_distance <= 20:
+            advantage = (abs(cost - base_line_costs[potential_position]))
+            winning.setdefault(advantage - manhatan_distance, [])
+            winning[advantage - manhatan_distance].append(tuple(sorted((position, potential_position))))
+#
+total = 0
+for k in sorted(winning):
+    if k>=100:
+        total += len(set(winning[k]))
+
+    print(k, len(set(winning[k])))
+
