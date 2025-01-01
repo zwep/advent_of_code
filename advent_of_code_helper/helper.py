@@ -5,11 +5,12 @@ import re
 from advent_of_code_helper.configuration import YEAR, DDATA_YEAR, DCODE
 
 
-DIR2POS = {'N': [-1, 0], 'E': [0, 1], 'S': [1, 0], 'W': [0, -1]}
+# DIR2POS = {'N': [-1, 0], 'E': [0, 1], 'S': [1, 0], 'W': [0, -1]}
 STEP2POS = {'U': [-1, 0], 'R': [0, 1], 'D': [1, 0], 'L': [0, -1]}
-DIR2STEP = {'N': 'U', 'E': 'R', 'S': 'D', 'W': 'L'}
-STEP2DIR = {v: k for k, v in DIR2STEP.items()}
+# DIR2STEP = {'N': 'U', 'E': 'R', 'S': 'D', 'W': 'L'}
+# STEP2DIR = {v: k for k, v in DIR2STEP.items()}
 STEP2REV = {'U': 'D', 'R': 'L', 'D': 'U', 'L': 'R'}
+STEP2ARROW = {'U': '^', 'R': '>', 'D': 'v', 'L': '<'}
 STEPS = {'U', 'D', 'L', 'R'}
 
 
@@ -218,10 +219,10 @@ def print_binary(x):
         print(line_str)
 
 
-def validate_coordinate(p, upper_bound_x, upper_bound_y=None):
+def validate_coordinate(p, upper_bound, upper_bound_y=None):
     if upper_bound_y is None:
-        upper_bound_y = upper_bound_x
-    if (0 <= p[0] < upper_bound_x) and (0 <= p[1] < upper_bound_y):
+        upper_bound_y = upper_bound
+    if (0 <= p[0] < upper_bound) and (0 <= p[1] < upper_bound_y):
         return True
     else:
         return False

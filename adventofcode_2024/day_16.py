@@ -115,30 +115,3 @@ while len(to_look_after):
     to_look_after.extend(previous[(temp_dir, temp_pos)])
 
 len(eehm)
-
-#
-# 129468 -- too high
-# 127520
-
-#
-# min_pos = min([(x, cost[(x, end_position)]) for x in helper.STEPS], key=lambda x: x[1])
-# direction = min_pos[0]
-#
-# position = end_position
-# import itertools
-# while True:
-#     z = [neighbour_search.get((x, position)) for x in helper.STEPS]
-#     z = list(itertools.chain(*z))
-#     z = list(set(z))
-#     z_cost = [cost[x] for x in z]
-#     min_cost = min(z_cost)
-#     index_min = z_cost.index(min_cost)
-#     position = z[index_min][1]
-#     print(position, min_cost)
-#
-#     if helper.list_compare(position, start_position):
-#         break
-#
-#
-# [(x, cost.get((x, (2, 139)))) for x in helper.STEPS]
-
