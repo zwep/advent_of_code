@@ -222,16 +222,16 @@ MAX_DIST = 1e10
 So...
 my idea is that...
 """
-#
-# s = 0
-# for iiii in puzzle_input:
-#     current_number = "A" + iiii
-#     number = int(re.findall("([0-9]+)", current_number)[0])
-#     shortest_sequence = get_shortest_sequence(current_number)
-#     # print(number, len(shortest_sequence))
-#     s += number *len(shortest_sequence)
-#
-# print(s)
+
+s = 0
+for iiii in ['029A']:
+    current_number = "A" + iiii
+    number = int(re.findall("([0-9]+)", current_number)[0])
+    shortest_sequence = get_shortest_sequence(current_number)
+    # print(number, len(shortest_sequence))
+    s += number * len(shortest_sequence)
+
+print(s)
 
 """
 Okay... again!
@@ -245,19 +245,18 @@ def get_sequence_recursive(start, end, depth):
     solutions = solve(DIRPAD, start, end, DIRPAD_N_x, DIRPAD_N_y)
     min_solution = math.inf
     for jj, solution in enumerate(solutions):
-        n_solution = 0
         # We always start and end with 'A'. Otherwise, we would never press the end result.
         solution = ['A'] + solution + ['A']
         length_solution = len(solution)
         if depth == N_MAX_DEPTH:
             # Remove one count, so that we 'remove' the first 'A'
-            n_solution += length_solution - 1
+            n_solution = length_solution - 1
         else:
+            n_solution = 0
             for j in range(length_solution - 1):
                 start_next = solution[j]
                 end_next = solution[j + 1]
-                # Multiply the amount of ways to get we can perform this step
-                # Or should it be plus...? I think it should be plus
+                # We should add the shortest sequences together
                 n_solution += get_sequence_recursive(start_next, end_next, depth+1)
         if n_solution < min_solution:
             min_solution = n_solution
@@ -270,19 +269,41 @@ def get_sequence_recursive(start, end, depth):
 # This always starts with A then goes to a number and we press A again
 
 MEMORY = {}
-# Or 25...?
-N_MAX_DEPTH = 3
+N_MAX_DEPTH = 24
 import math
 
 def newfun(current_number):
     collection = {}
-    shortest = 0
+    shortest_number = 0
     for i in range(len(current_number) - 1):
         collection.setdefault(i, [])
         start_numpad = current_number[i]
         end_numpad = current_number[i + 1]
-        shortest_path = solve(NUMPAD, start_numpad, end_numpad, NUMPAD_N_x, NUMPAD_N_y)
+        shortest_paths = solve(NUMPAD, start_numpad, end_numpad, NUMPAD_N_x, NUMPAD_N_y)
+        shortest_dirpad = math.inf
+        for shortest_path in shortest_paths:
+            shortest_path = ['A'] + shortest_path + ['A']
+            temp = 0
+            for j in range(len(shortest_path)- 1):
+                start_dirpad = shortest_path[j]
+                end_dirpad = shortest_path[j + 1]
+                result = get_sequence_recursive(start_dirpad, end_dirpad, depth=0)
+                temp += result
+            if temp < shortest_dirpad:
+                shortest_dirpad = temp
+        shortest_number += shortest_dirpad
 
+    return shortest_number
 
-result = get_sequence_recursive('A', '<', depth=0)
-print('Number of combinations', result)
+newfun('A029A')
+
+s = 0
+for iiii in puzzle_input:
+    current_number = "A" + iiii
+    number = int(re.findall("([0-9]+)", current_number)[0])
+    shortest_sequence = newfun(current_number)
+    # print(number, len(shortest_sequence))
+    s += number * shortest_sequence
+
+# too low
+print(s)
