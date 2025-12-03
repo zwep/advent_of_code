@@ -4,3 +4,4 @@
 poetry.lock
 Cargo.lock
 data
+target/
