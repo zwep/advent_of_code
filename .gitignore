@@ -2,3 +2,5 @@
 .idea/*
 .idea/workspace.xml
 poetry.lock
+Cargo.lock
+data
