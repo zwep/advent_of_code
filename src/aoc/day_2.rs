@@ -10,14 +10,23 @@ fn construct_valid_number(x: i64, m: i64) -> i64 {
             s += 10_i64.pow(i as u32);
         }
     }
-    (x % 10_i64.pow(m as u32)) * s
+    //println!("x: {}, m: {}", (x % 10_i64.pow(m as u32)), x);
+    // here... if
+    if x % 10_i64.pow(m as u32) == 0 {
+        (x % 10_i64.pow(m as u32)) * s
+    } else if ((x % 10_i64.pow(m as u32)).ilog10() + 1) != m as u32 {
+        (x % 10_i64.pow(m as u32)) * s
+    } else {
+        (x % 10_i64.pow(m as u32)) * s
+    }
+
 }
 
 // This is the main function.
-fn main() {
+pub fn main() {
     // Statements here are executed when the compiled binary is called.
     let contents = fs::read_to_string("data/day_2.txt")
-        .expect("Could not read file");
+        .expect("Could not read utils");
     let lines: Vec<&str> = contents.split(",").collect();
     let mut result_list = Vec::new();
 
@@ -34,7 +43,7 @@ fn main() {
                 max_size = 1;
             }
             for n in 1..max_size+1 {
-                //println!("constructed nr {} {}", temp, n);
+                //println!("constructed nr {} {}", construct_valid_number(x, n), n);
                 if x == construct_valid_number(x, n){
                     println!("{} -- {}",x, n);
                     result_list.push(x)
