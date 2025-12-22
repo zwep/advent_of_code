@@ -1,8 +1,9 @@
+#[allow(unused)]
 
 mod utils;
 mod aoc;
-use aoc::day_3;
+use aoc::day_4;
 
 fn main() {
-    day_3::part_2();
+    day_4::part_1();
 }
