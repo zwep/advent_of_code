@@ -2,8 +2,8 @@
 
 mod utils;
 mod aoc;
-use aoc::day_4;
+use aoc::day_5;
 
 fn main() {
-    day_4::part_1();
+    day_5::part_2();
 }

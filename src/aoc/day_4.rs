@@ -47,7 +47,7 @@ fn alter_data(data: &mut Vec<Vec<char>>) -> i32{
     available_rols
 }
 
-pub fn part_1(){
+pub fn part_1_and_2(){
     println!("Starting part 1");
     let path = env::current_dir().unwrap().display().to_string();
     println!("The current directory is {}", path);
