@@ -1,10 +1,9 @@
 use std::collections::HashSet;
 use std::env;
 use std::fmt::{Debug, Display};
-use std::ops::Range;
 use std::path::Path;
 use crate::utils::file;
-use crate::utils::file::{consolidate_range, vec_char_to_int, vec_string_range_to_range, vec_string_to_int, vec_string_to_vec_int};
+use crate::utils::file::{consolidate_range,vec_string_range_to_range, vec_string_to_int};
 
 pub fn part_1(){
     println!("Starting part 1");
